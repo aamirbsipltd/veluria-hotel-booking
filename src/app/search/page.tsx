@@ -33,7 +33,8 @@ async function SearchResults({ sp }: { sp: Awaited<SearchPageProps['searchParams
 
   let hotels: { id: string; hid: number; rates: unknown[] }[] = [];
   try {
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
+    const base = process.env.NEXT_PUBLIC_BASE_URL ??
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
     const res = await fetch(`${base}/api/etg/search`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

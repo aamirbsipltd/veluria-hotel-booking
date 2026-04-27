@@ -139,7 +139,8 @@ export async function POST(req: NextRequest) {
         alreadyComplete: true,
       });
     }
+    const msg = err instanceof Error ? err.message : String(err);
     console.error('[book] error:', err);
-    return NextResponse.json({ error: 'Booking failed' }, { status: 502 });
+    return NextResponse.json({ error: 'Booking failed', detail: msg }, { status: 502 });
   }
 }

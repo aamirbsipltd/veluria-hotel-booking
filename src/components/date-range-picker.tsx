@@ -16,18 +16,18 @@ type Props = {
 
 export function DateRangePicker({ value, onChange, className }: Props) {
   const [open, setOpen] = useState(false);
+  const [localRange, setLocalRange] = useState<DateRange | undefined>(
+    value ? { from: value.from, to: value.to } : undefined
+  );
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
-  const range: DateRange | undefined = value
-    ? { from: value.from, to: value.to }
-    : undefined;
 
   const label = value
     ? `${format(value.from, 'MMM d')} – ${format(value.to, 'MMM d, yyyy')}`
     : 'Select dates';
 
   function handleSelect(r: DateRange | undefined) {
+    setLocalRange(r);
     if (!r?.from) {
       onChange(null);
       return;
@@ -53,7 +53,7 @@ export function DateRangePicker({ value, onChange, className }: Props) {
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="range"
-          selected={range}
+          selected={localRange}
           onSelect={handleSelect}
           disabled={(date) => date < today}
           numberOfMonths={2}

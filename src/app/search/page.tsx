@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 import { ResultsList } from '@/components/results-list';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -68,7 +69,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
           <Link href="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" />
-            <span className="font-bold text-foreground text-lg">Veluria</span>
+            <div className="rounded-xl bg-white p-1 inline-flex">
+              <Image src="/veluria-logo.png" alt="Veluria" width={36} height={36} className="block" />
+            </div>
           </Link>
           <span className="text-muted-foreground">·</span>
           <span className="text-sm">{destination}</span>

@@ -23,7 +23,9 @@ export default function HomePage() {
         <div className="w-full max-w-2xl">
           {/* Brand */}
           <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold text-white tracking-tight mb-2">Veluria</h1>
+            <div className="mx-auto mb-4 inline-block rounded-2xl bg-white p-3 shadow-xl">
+              <Image src="/veluria-logo.png" alt="Veluria" width={160} height={160} className="block" />
+            </div>
             <p className="text-lg text-white/80">Hotels, simplified.</p>
           </div>
 

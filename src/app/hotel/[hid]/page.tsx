@@ -7,6 +7,8 @@ import { PhotoGallery } from '@/components/photo-gallery';
 import { RoomList } from '@/components/room-list';
 import { Skeleton } from '@/components/ui/skeleton';
 import { filterHotelPaymentRates } from '@/lib/etg/payment-selection';
+import { etg } from '@/lib/etg/adapter';
+import { cache } from '@/lib/cache/memory';
 
 type SearchCtx = {
   checkin: string;
@@ -18,33 +20,37 @@ type SearchCtx = {
 
 async function fetchHotelData(
   hid: number,
-  ctx: SearchCtx,
-  baseUrl: string
+  ctx: SearchCtx
 ): Promise<{
   info: HotelInfoResponseType | null;
   rates: z.infer<typeof HotelpageResponse>['hotels'][0]['rates'];
 }> {
-  const [infoRes, hpRes] = await Promise.all([
-    fetch(`${baseUrl}/api/etg/hotel-info?id=t/${hid}`, { next: { revalidate: 3600 } }),
-    fetch(`${baseUrl}/api/etg/hotelpage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        hid,
-        checkin: ctx.checkin,
-        checkout: ctx.checkout,
-        residency: ctx.residency,
-        language: 'en',
-        guests: JSON.parse(ctx.guests),
-        currency: ctx.currency,
-      }),
-      cache: 'no-store',
-    }),
-  ]);
+  const cacheKey = `hotel-info:t/${hid}`;
+  let info: HotelInfoResponseType | null = await cache.get<HotelInfoResponseType>(cacheKey) ?? null;
+  if (!info) {
+    try {
+      info = await etg.hotelInfo(`t/${hid}`);
+      await cache.set(cacheKey, info, 3600);
+    } catch {
+      info = null;
+    }
+  }
 
-  const info = infoRes.ok ? ((await infoRes.json()) as HotelInfoResponseType) : null;
-  const hp = hpRes.ok ? ((await hpRes.json()) as z.infer<typeof HotelpageResponse>) : null;
-  const rates = filterHotelPaymentRates(hp?.hotels?.[0]?.rates ?? []);
+  let rates: z.infer<typeof HotelpageResponse>['hotels'][0]['rates'] = [];
+  try {
+    const hp = await etg.hotelpage({
+      hid,
+      checkin: ctx.checkin,
+      checkout: ctx.checkout,
+      residency: ctx.residency,
+      language: 'en',
+      guests: JSON.parse(ctx.guests),
+      currency: ctx.currency,
+    });
+    rates = filterHotelPaymentRates(hp.hotels[0]?.rates ?? []);
+  } catch {
+    rates = [];
+  }
 
   return { info, rates };
 }
@@ -70,11 +76,7 @@ export default async function HotelDetailPage({
     currency: sp.currency ?? 'USD',
   };
 
-  const host =
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-
-  const { info, rates } = await fetchHotelData(hid, ctx, host);
+  const { info, rates } = await fetchHotelData(hid, ctx);
 
   if (!info) notFound();
 

@@ -58,6 +58,7 @@ export function DateRangePicker({ value, onChange, className }: Props) {
           disabled={(date) => date < today}
           numberOfMonths={2}
           defaultMonth={value?.from ?? today}
+          resetOnSelect
         />
       </PopoverContent>
     </Popover>

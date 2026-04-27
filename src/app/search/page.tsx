@@ -5,6 +5,10 @@ import { ArrowLeft } from 'lucide-react';
 import { ResultsList } from '@/components/results-list';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ALL_HOTELS } from '@/lib/etg/mocks/master-hotels';
+import { etg } from '@/lib/etg/adapter';
+import { cache } from '@/lib/cache/memory';
+import { searchCacheKey } from '@/lib/cache/key';
+import { EtgApiError } from '@/lib/etg/errors';
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -34,20 +38,20 @@ async function SearchResults({ sp }: { sp: Awaited<SearchPageProps['searchParams
 
   let hotels: { id: string; hid: number; rates: unknown[] }[] = [];
   try {
-    const base = process.env.NEXT_PUBLIC_BASE_URL ??
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-    const res = await fetch(`${base}/api/etg/search`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ region_id: regionId, checkin, checkout, guests, residency, currency: 'USD', language: 'en' }),
-      cache: 'no-store',
-    });
-    if (res.ok) {
-      const data = await res.json();
-      hotels = data.hotels ?? [];
+    const params = { region_id: regionId, checkin, checkout, guests, residency, currency: 'USD', language: 'en' };
+    const cacheKey = searchCacheKey({ region_id: regionId, checkin, checkout, guests, residency, currency: 'USD' });
+    const cached = await cache.get<{ hotels: typeof hotels }>(cacheKey);
+    if (cached) {
+      hotels = cached.hotels;
+    } else {
+      const result = await etg.searchByRegion(params);
+      hotels = result.hotels;
+      await cache.set(cacheKey, result, 600);
     }
   } catch (err) {
-    console.error('Search fetch error', err);
+    if (!(err instanceof EtgApiError && err.code === 'hotels_not_found')) {
+      console.error('Search error', err);
+    }
   }
 
   return (

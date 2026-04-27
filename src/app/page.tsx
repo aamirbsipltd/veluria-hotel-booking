@@ -30,7 +30,7 @@ export default function HomePage() {
           </div>
 
           {/* Glass search card */}
-          <div className="dark rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md p-6 shadow-2xl">
+          <div className="rounded-2xl bg-white/95 backdrop-blur-sm p-6 shadow-2xl">
             <SearchForm />
           </div>
 

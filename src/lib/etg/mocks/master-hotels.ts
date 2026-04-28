@@ -21,6 +21,13 @@ export type MasterHotel = {
   longitude: number;
   description_struct: { title: string; paragraphs: string[] }[];
   rateTemplates: RateTemplate[];
+  // Enrichment fields (not from ETG — used for display)
+  reviewScore: number;
+  reviewLabel: 'Good' | 'Very good' | 'Excellent' | 'Wonderful';
+  reviewCount: number;
+  distanceFromCentreKm: number;
+  district: string;
+  recentBookingsHours: number;
 };
 
 function makeRate(
@@ -152,6 +159,8 @@ const LISBON_HOTELS: MasterHotel[] = [
       makeRate('1001-r3', 'Junior Suite', 'Junior Suite', 'King bed', '520.00', 'BB', true, 3, 2, 6, 3, 5),
       makeRate('1001-r4', 'Deluxe Double Non-refundable', 'Deluxe Double', 'Double bed', '280.00', 'RO', false, 1, 2, 5, null, 5),
     ],
+    reviewScore: 9.4, reviewLabel: 'Wonderful', reviewCount: 1842,
+    distanceFromCentreKm: 0.4, district: 'Bairro Alto', recentBookingsHours: 2,
   },
   {
     id: 't/1002',
@@ -188,6 +197,8 @@ const LISBON_HOTELS: MasterHotel[] = [
       makeRate('1002-r2', 'Superior River View', 'Superior Double', 'Double bed', '220.00', 'BB', true, 3, 2, 5, 7, 4),
       makeRate('1002-r3', 'Deluxe Terrace Room', 'Deluxe Double', 'King bed', '260.00', 'BB', true, 3, 2, 6, 5, 4),
     ],
+    reviewScore: 8.8, reviewLabel: 'Excellent', reviewCount: 964,
+    distanceFromCentreKm: 0.9, district: 'Alfama', recentBookingsHours: 4,
   },
   {
     id: 't/1003',
@@ -223,6 +234,8 @@ const LISBON_HOTELS: MasterHotel[] = [
       makeRate('1003-r2', 'Suite with Terrace', 'Suite', 'King bed', '200.00', 'BB', true, 3, 2, 6, 7, 4),
       makeRate('1003-r3', 'Classic Non-refundable', 'Classic Double', 'Double bed', '120.00', 'RO', false, 1, 2, 5, null, 4),
     ],
+    reviewScore: 8.6, reviewLabel: 'Excellent', reviewCount: 712,
+    distanceFromCentreKm: 0.5, district: 'Príncipe Real', recentBookingsHours: 7,
   },
   {
     id: 't/1004',
@@ -260,6 +273,8 @@ const LISBON_HOTELS: MasterHotel[] = [
       makeRate('1004-r2', 'Deluxe Suite Pool View', 'Deluxe Suite', 'King bed', '780.00', 'BB', true, 3, 2, 6, 7, 5),
       makeRate('1004-r3', 'Palace Suite Non-refundable', 'Suite', 'King bed', '580.00', 'BB', true, 3, 2, 6, null, 5),
     ],
+    reviewScore: 9.6, reviewLabel: 'Wonderful', reviewCount: 387,
+    distanceFromCentreKm: 0.8, district: 'Castelo', recentBookingsHours: 12,
   },
   {
     id: 't/1005',
@@ -294,6 +309,8 @@ const LISBON_HOTELS: MasterHotel[] = [
       makeRate('1005-r3', 'Standard Twin', 'Standard Twin', 'Twin beds', '115.00', 'RO', false, 0, 2, 3, 10, 4),
       makeRate('1005-r4', 'Budget Non-refundable', 'Standard Double', 'Double bed', '95.00', 'RO', false, 0, 2, 5, null, 4),
     ],
+    reviewScore: 8.2, reviewLabel: 'Excellent', reviewCount: 1523,
+    distanceFromCentreKm: 1.1, district: 'Avenida', recentBookingsHours: 3,
   },
   {
     id: 't/1006',
@@ -323,6 +340,8 @@ const LISBON_HOTELS: MasterHotel[] = [
       makeRate('1006-r1', 'Studio Apartment', 'Studio', 'Double bed', '200.00', 'RO', false, 1, 3, 5, 10, 5),
       makeRate('1006-r2', 'One Bedroom Apartment', 'Apartment', 'King bed', '280.00', 'RO', false, 1, 4, 6, 7, 5),
     ],
+    reviewScore: 9.1, reviewLabel: 'Wonderful', reviewCount: 634,
+    distanceFromCentreKm: 0.6, district: 'Chiado', recentBookingsHours: 1,
   },
 ];
 
@@ -367,6 +386,8 @@ const TOKYO_HOTELS: MasterHotel[] = [
       makeRate('2001-r3', 'Park Deluxe Non-refundable', 'Deluxe Room', 'King bed', '600.00', 'RO', false, 3, 2, 6, null, 5),
       makeRate('2001-r4', 'Deluxe Twin', 'Deluxe Twin', 'Twin beds', '720.00', 'BB', true, 3, 2, 3, 7, 5),
     ],
+    reviewScore: 9.3, reviewLabel: 'Wonderful', reviewCount: 2187,
+    distanceFromCentreKm: 2.1, district: 'Shinjuku', recentBookingsHours: 2,
   },
   {
     id: 't/2002',
@@ -398,6 +419,8 @@ const TOKYO_HOTELS: MasterHotel[] = [
       makeRate('2002-r2', 'Deluxe Room', 'Deluxe Room', 'King bed', '900.00', 'RO', false, 3, 2, 6, 7, 5),
       makeRate('2002-r3', 'Deluxe Non-refundable', 'Deluxe Room', 'King bed', '820.00', 'RO', false, 3, 2, 6, null, 5),
     ],
+    reviewScore: 9.5, reviewLabel: 'Wonderful', reviewCount: 891,
+    distanceFromCentreKm: 1.3, district: 'Otemachi', recentBookingsHours: 6,
   },
   {
     id: 't/2003',
@@ -429,6 +452,8 @@ const TOKYO_HOTELS: MasterHotel[] = [
       makeRate('2003-r3', 'Deluxe Non-refundable', 'Deluxe Room', 'King bed', '680.00', 'RO', false, 3, 2, 6, null, 5),
       makeRate('2003-r4', 'Suite', 'Suite', 'King bed', '1200.00', 'BB', true, 3, 2, 6, 5, 5),
     ],
+    reviewScore: 9.2, reviewLabel: 'Wonderful', reviewCount: 1654,
+    distanceFromCentreKm: 1.8, district: 'Ginza', recentBookingsHours: 1,
   },
   {
     id: 't/2004',
@@ -458,6 +483,8 @@ const TOKYO_HOTELS: MasterHotel[] = [
       makeRate('2004-r2', 'Superior Twin', 'Superior Twin', 'Twin beds', '140.00', 'RO', false, 0, 2, 3, 10, 3),
       makeRate('2004-r3', 'Budget Non-refundable', 'Standard Double', 'Double bed', '100.00', 'RO', false, 0, 2, 5, null, 3),
     ],
+    reviewScore: 7.6, reviewLabel: 'Good', reviewCount: 2893,
+    distanceFromCentreKm: 2.4, district: 'Kabukicho', recentBookingsHours: 3,
   },
   {
     id: 't/2005',
@@ -488,6 +515,8 @@ const TOKYO_HOTELS: MasterHotel[] = [
       makeRate('2005-r2', 'Deluxe City View', 'Deluxe Room', 'King bed', '340.00', 'BB', true, 3, 2, 6, 7, 4),
       makeRate('2005-r3', 'Standard Non-refundable', 'Standard Room', 'Double bed', '220.00', 'RO', false, 0, 2, 5, null, 4),
     ],
+    reviewScore: 8.4, reviewLabel: 'Excellent', reviewCount: 1347,
+    distanceFromCentreKm: 3.1, district: 'Shibuya', recentBookingsHours: 8,
   },
 ];
 
@@ -531,6 +560,12 @@ const MADRID_HOTELS: MasterHotel[] = [
       makeRate('3001-r3', 'Junior Suite', 'Junior Suite', 'King bed', '880.00', 'BB', true, 3, 2, 6, 3, 5),
       makeRate('3001-r4', 'Deluxe Non-refundable', 'Deluxe Room', 'King bed', '520.00', 'RO', false, 1, 2, 6, null, 5),
     ],
+    reviewScore: 9.4,
+    reviewLabel: 'Wonderful',
+    reviewCount: 2841,
+    distanceFromCentreKm: 1.2,
+    district: 'Paseo del Arte',
+    recentBookingsHours: 3,
   },
   {
     id: 't/3002',
@@ -561,6 +596,12 @@ const MADRID_HOTELS: MasterHotel[] = [
       makeRate('3002-r2', 'Deluxe Room', 'Deluxe Room', 'King bed', '380.00', 'BB', true, 1, 2, 6, 7, 5),
       makeRate('3002-r3', 'Standard Non-refundable', 'Standard Room', 'Double bed', '280.00', 'RO', false, 0, 2, 5, null, 5),
     ],
+    reviewScore: 9.1,
+    reviewLabel: 'Wonderful',
+    reviewCount: 1654,
+    distanceFromCentreKm: 0.8,
+    district: 'Barrio de las Letras',
+    recentBookingsHours: 5,
   },
   {
     id: 't/3003',
@@ -591,6 +632,12 @@ const MADRID_HOTELS: MasterHotel[] = [
       makeRate('3003-r2', 'Superior Room', 'Superior Room', 'King bed', '210.00', 'BB', true, 1, 2, 6, 10, 5),
       makeRate('3003-r3', 'Budget Non-refundable', 'Standard Room', 'King bed', '160.00', 'RO', false, 0, 2, 6, null, 5),
     ],
+    reviewScore: 8.7,
+    reviewLabel: 'Excellent',
+    reviewCount: 2103,
+    distanceFromCentreKm: 2.8,
+    district: 'Castellana',
+    recentBookingsHours: 11,
   },
   {
     id: 't/3004',
@@ -620,6 +667,12 @@ const MADRID_HOTELS: MasterHotel[] = [
       makeRate('3004-r2', 'Deluxe Gran Via View', 'Deluxe Room', 'King bed', '190.00', 'BB', true, 3, 2, 6, 7, 4),
       makeRate('3004-r3', 'Standard Non-refundable', 'Standard Room', 'Double bed', '130.00', 'RO', false, 0, 2, 5, null, 4),
     ],
+    reviewScore: 8.5,
+    reviewLabel: 'Excellent',
+    reviewCount: 3219,
+    distanceFromCentreKm: 0.5,
+    district: 'Gran Vía',
+    recentBookingsHours: 7,
   },
   {
     id: 't/3005',
@@ -649,6 +702,12 @@ const MADRID_HOTELS: MasterHotel[] = [
       makeRate('3005-r2', 'Deluxe Double', 'Deluxe Double', 'King bed', '145.00', 'RO', false, 0, 2, 6, 7, 4),
       makeRate('3005-r3', 'Budget Non-refundable', 'Standard Double', 'Double bed', '95.00', 'RO', false, 0, 2, 5, null, 4),
     ],
+    reviewScore: 8.2,
+    reviewLabel: 'Excellent',
+    reviewCount: 1872,
+    distanceFromCentreKm: 0.9,
+    district: 'Chueca',
+    recentBookingsHours: 14,
   },
 ];
 
@@ -693,6 +752,12 @@ const DUBAI_HOTELS: MasterHotel[] = [
       makeRate('4001-r3', 'Signature Suite', 'Signature Suite', 'King bed', '1200.00', 'BB', true, 3, 2, 6, 3, 5),
       makeRate('4001-r4', 'Coral Non-refundable', 'Coral King', 'King bed', '400.00', 'BB', true, 3, 2, 6, null, 5),
     ],
+    reviewScore: 8.9,
+    reviewLabel: 'Excellent',
+    reviewCount: 4512,
+    distanceFromCentreKm: 14.2,
+    district: 'Palm Jumeirah',
+    recentBookingsHours: 4,
   },
   {
     id: 't/4002',
@@ -731,6 +796,12 @@ const DUBAI_HOTELS: MasterHotel[] = [
       makeRate('4002-r2', 'Panoramic Suite', 'Panoramic Suite', 'King bed', '3500.00', 'BB', true, 3, 2, 6, 5, 5),
       makeRate('4002-r3', 'Deluxe Non-refundable', 'One Bedroom Suite', 'King bed', '2000.00', 'BB', true, 3, 2, 6, null, 5),
     ],
+    reviewScore: 9.6,
+    reviewLabel: 'Wonderful',
+    reviewCount: 1287,
+    distanceFromCentreKm: 11.5,
+    district: 'Jumeirah',
+    recentBookingsHours: 6,
   },
   {
     id: 't/4003',
@@ -763,6 +834,12 @@ const DUBAI_HOTELS: MasterHotel[] = [
       makeRate('4003-r3', 'Junior Suite Ocean', 'Junior Suite', 'King bed', '950.00', 'BB', true, 3, 2, 6, 5, 5),
       makeRate('4003-r4', 'Garden Non-refundable', 'Garden View', 'King bed', '460.00', 'BB', true, 1, 2, 6, null, 5),
     ],
+    reviewScore: 9.2,
+    reviewLabel: 'Wonderful',
+    reviewCount: 2198,
+    distanceFromCentreKm: 8.7,
+    district: 'Jumeirah Beach',
+    recentBookingsHours: 9,
   },
   {
     id: 't/4004',
@@ -793,6 +870,12 @@ const DUBAI_HOTELS: MasterHotel[] = [
       makeRate('4004-r2', 'Deluxe Burj View', 'Deluxe Room', 'King bed', '480.00', 'BB', true, 3, 2, 6, 5, 5),
       makeRate('4004-r3', 'Standard Non-refundable', 'Standard Room', 'King bed', '320.00', 'RO', false, 1, 2, 6, null, 5),
     ],
+    reviewScore: 9.0,
+    reviewLabel: 'Wonderful',
+    reviewCount: 3087,
+    distanceFromCentreKm: 1.8,
+    district: 'Downtown Dubai',
+    recentBookingsHours: 2,
   },
   {
     id: 't/4005',
@@ -822,6 +905,12 @@ const DUBAI_HOTELS: MasterHotel[] = [
       makeRate('4005-r2', 'Deluxe Sea View', 'Deluxe Room', 'King bed', '240.00', 'BB', true, 3, 2, 6, 7, 4),
       makeRate('4005-r3', 'Budget Non-refundable', 'Standard Room', 'King bed', '155.00', 'RO', false, 0, 2, 6, null, 4),
     ],
+    reviewScore: 8.3,
+    reviewLabel: 'Excellent',
+    reviewCount: 2764,
+    distanceFromCentreKm: 17.4,
+    district: 'JBR',
+    recentBookingsHours: 10,
   },
 ];
 

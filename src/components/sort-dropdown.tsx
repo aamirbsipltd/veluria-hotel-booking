@@ -2,7 +2,7 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export type SortKey = 'price_asc' | 'price_desc' | 'stars_desc' | 'stars_asc';
+export type SortKey = 'recommended' | 'price_asc' | 'price_desc' | 'stars_desc' | 'stars_asc' | 'rating' | 'distance';
 
 type Props = {
   value: SortKey;
@@ -12,12 +12,15 @@ type Props = {
 export function SortDropdown({ value, onChange }: Props) {
   return (
     <Select value={value} onValueChange={(v) => onChange(v as SortKey)}>
-      <SelectTrigger className="w-44">
+      <SelectTrigger className="w-48">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="recommended">Recommended</SelectItem>
         <SelectItem value="price_asc">Price: low to high</SelectItem>
         <SelectItem value="price_desc">Price: high to low</SelectItem>
+        <SelectItem value="rating">Guest rating</SelectItem>
+        <SelectItem value="distance">Distance from centre</SelectItem>
         <SelectItem value="stars_desc">Stars: high to low</SelectItem>
         <SelectItem value="stars_asc">Stars: low to high</SelectItem>
       </SelectContent>

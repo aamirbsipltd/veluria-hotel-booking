@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { filterHotelPaymentRates } from '@/lib/etg/payment-selection';
 import { etg } from '@/lib/etg/adapter';
 import { cache } from '@/lib/cache/memory';
+import { getHotelByHid } from '@/lib/etg/mocks/master-hotels';
 
 type SearchCtx = {
   checkin: string;
@@ -81,9 +82,10 @@ export default async function HotelDetailPage({
   if (!info) notFound();
 
   const starCount = Math.round(info.star_rating);
+  const enrichment = getHotelByHid(hid);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-16">
       <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
         {/* Gallery */}
         <Suspense fallback={<Skeleton className="w-full h-[420px] rounded-xl" />}>
@@ -113,6 +115,24 @@ export default async function HotelDetailPage({
               <h1 className="text-3xl font-bold text-gray-900">{info.name}</h1>
               <p className="text-gray-500 mt-1">{info.address}</p>
             </div>
+
+            {/* Review score */}
+            {enrichment && (
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                <div className="flex items-center gap-3">
+                  <span className={`text-white text-sm font-bold px-2.5 py-1 rounded ${enrichment.reviewScore >= 9 ? 'bg-teal-700' : enrichment.reviewScore >= 8 ? 'bg-emerald-700' : 'bg-amber-600'}`}>
+                    {enrichment.reviewScore.toFixed(1)}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{enrichment.reviewLabel}</p>
+                    <p className="text-xs text-gray-500">Based on {enrichment.reviewCount.toLocaleString()} verified guest reviews</p>
+                  </div>
+                </div>
+                <p className="hidden md:block text-sm text-gray-500 ml-auto">
+                  {enrichment.distanceFromCentreKm} km from city centre
+                </p>
+              </div>
+            )}
 
             {/* Check-in/out */}
             {(info.check_in_time || info.check_out_time) && (

@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 import { ResultsList } from '@/components/results-list';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -68,21 +67,19 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const destination = sp.destination ?? 'Hotels';
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b bg-card sticky top-0 z-10">
+    <div className="min-h-screen bg-background pt-16">
+      <header className="border-b bg-white/95 backdrop-blur-md sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
             <ArrowLeft className="h-4 w-4" />
-            <div className="rounded-xl bg-white p-1 inline-flex">
-              <Image src="/veluria-logo.png" alt="Veluria" width={36} height={36} className="block" />
-            </div>
+            <span>Home</span>
           </Link>
-          <span className="text-muted-foreground">·</span>
-          <span className="text-sm">{destination}</span>
+          <span className="text-gray-300">·</span>
+          <span className="text-sm font-medium text-gray-700">{destination}</span>
           {sp.checkin && sp.checkout && (
             <>
-              <span className="text-muted-foreground">·</span>
-              <span className="text-sm">{sp.checkin} – {sp.checkout}</span>
+              <span className="text-gray-300">·</span>
+              <span className="text-sm text-gray-500">{sp.checkin} – {sp.checkout}</span>
             </>
           )}
         </div>
@@ -99,14 +96,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
 function SearchSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-      {Array.from({ length: 8 }, (_, i) => (
-        <div key={i} className="rounded-xl border overflow-hidden">
-          <Skeleton className="aspect-[4/3] w-full" />
-          <div className="p-4 space-y-2">
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-3 w-1/2" />
-            <Skeleton className="h-8 w-full mt-2" />
+    <div className="grid grid-cols-1 gap-4">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="rounded-2xl border border-gray-200 overflow-hidden grid grid-cols-1 md:grid-cols-[280px_1fr]">
+          <Skeleton className="h-[220px] w-full" />
+          <div className="p-6 space-y-3">
+            <Skeleton className="h-3 w-1/4" />
+            <Skeleton className="h-5 w-2/3" />
+            <Skeleton className="h-3 w-1/3" />
+            <Skeleton className="h-4 w-1/4 mt-2" />
           </div>
         </div>
       ))}
